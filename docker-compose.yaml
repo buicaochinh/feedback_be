@@ -1,0 +1,30 @@
+version: "3"
+services:
+  app:
+    build:
+      context: .
+    environment:
+      - DB_HOST=${DB_HOST}
+      - DB_NAME=${DB_NAME}
+      - PORT=${PORT}
+      - DB_URL=${DB_URL}
+    ports:
+      - "${PORT}:${PORT}"
+    volumes:
+      - ./:/app
+    networks:
+      - my_app_dic
+    depends_on:
+      - db
+  db:
+    image: mongo:4.2.13-bionic
+    ports:
+      - 27017:27017
+    volumes:
+      - ./.docker/data/db:/data/db
+    restart: unless-stopped
+    networks:
+      - my_app_dic
+networks:
+  my_app_dic:
+    driver: bridge
